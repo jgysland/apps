@@ -134,77 +134,6 @@ additionalArguments:
   - "--serverstransport.insecureskipverify=true"
 
 
-# Configure ports
-ports:
-  # The name of this one can't be changed as it is used for the readiness and
-  # liveness probes, but you can adjust its config to your liking
-  traefik:
-    port: 9000
-    # Use hostPort if set.
-    # hostPort: 9000
-    #
-    # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
-    # means it's listening on all your interfaces and all your IPs. You may want
-    # to set this value if you need traefik to listen on specific interface
-    # only.
-    # hostIP: 192.168.100.10
-
-    # Override the liveness/readiness port. This is useful to integrate traefik
-    # with an external Load Balancer that performs healthchecks.
-    # healthchecksPort: 9000
-
-    # Defines whether the port is exposed if service.type is LoadBalancer or
-    # NodePort.
-    #
-    # You SHOULD NOT expose the traefik port on production deployments.
-    # If you want to access it from outside of your cluster,
-    # use `kubectl port-forward` or create a secure ingress
-    expose: false
-    # The exposed port for this service
-    exposedPort: 9000
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-  web:
-    port: 9080
-    # hostPort: 8000
-    expose: true
-    exposedPort: 80
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-    # Use nodeport if set. This is useful if you have configured Traefik in a
-    # LoadBalancer
-    # nodePort: 32080
-    # Port Redirections
-    # Added in 2.2, you can make permanent redirects via entrypoints.
-    # https://docs.traefik.io/routing/entrypoints/#redirection
-    redirectTo: websecure
-  websecure:
-    port: 9443
-    # hostPort: 8443
-    expose: true
-    exposedPort: 443
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-    # nodePort: 32443
-    # Set TLS at the entrypoint
-    # https://doc.traefik.io/traefik/routing/entrypoints/#tls
-    tls:
-      enabled: true
-  metrics:
-    port: 9100
-    # hostPort: 9100
-    # Defines whether the port is exposed if service.type is LoadBalancer or
-    # NodePort.
-    #
-    # You may not want to expose the metrics port on production deployments.
-    # If you want to access it from outside of your cluster,
-    # use `kubectl port-forward` or create a secure ingress
-    expose: false
-    # The exposed port for this service
-    exposedPort: 9100
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-
 # TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
 # Example:
@@ -254,11 +183,43 @@ service:
         port: 9100
         protocol: TCP
         targetPort: 9100
-
 #  udp:
 #    enabled: true
 #    type: LoadBalancer
 
+
+probes:
+  # -- Liveness probe configuration
+  # @default -- See below
+  liveness:
+    # -- sets the probe type when not using a custom probe
+    # @default -- "TCP"
+    type: HTTP
+    # -- If a HTTP probe is used (default for HTTP/HTTPS services) this path is used
+    # @default -- "/"
+    path: "/ping"
+
+
+  # -- Redainess probe configuration
+  # @default -- See below
+  readiness:
+    # -- sets the probe type when not using a custom probe
+    # @default -- "TCP"
+    type: HTTP
+    # -- If a HTTP probe is used (default for HTTP/HTTPS services) this path is used
+    # @default -- "/"
+    path: "/ping"
+
+
+  # -- Startup probe configuration
+  # @default -- See below
+  startup:
+    # -- sets the probe type when not using a custom probe
+    # @default -- "TCP"
+    type: HTTP
+    # -- If a HTTP probe is used (default for HTTP/HTTPS services) this path is used
+    # @default -- "/"
+    path: "/ping"
 
 
 # Whether Role Based Access Control objects like roles and rolebindings should be created
