@@ -1,4 +1,4 @@
-{{- if .Values.service.enabled -}}
+{{- if .Values.serviceold.enabled -}}
 
 {{ $tcpPorts := dict }}
 {{ $udpPorts := dict }}
