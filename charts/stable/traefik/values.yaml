@@ -226,27 +226,39 @@ tlsOptions:
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
 service:
-  enabled: true
-  type: LoadBalancer
-  # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
-  annotations: {}
-  # Additional annotations for TCP service only
-  annotationsTCP: {}
-  # Additional annotations for UDP service only
-  annotationsUDP: {}
-  # Additional service labels (e.g. for filtering Service by custom labels)
-  labels: {}
-  # Additional entries here will be added to the service spec. Cannot contains
-  # type, selector or ports entries.
-  spec: {}
-    # externalTrafficPolicy: Cluster
-    # loadBalancerIP: "1.2.3.4"
-    # clusterIP: "2.3.4.5"
-  loadBalancerSourceRanges: []
-    # - 192.168.0.1/32
-    # - 172.16.0.0/16
-  externalIPs: []
-    # - 1.2.3.4
+  main:
+    enabled: true
+    type: LoadBalancer
+    ports:
+      main:
+        enabled: true
+        port: 9000
+        protocol: HTTP
+        targetPort: 9000
+  tcp:
+    enabled: true
+    type: LoadBalancer
+    ports:
+      web:
+        enabled: true
+        port: 9080
+        protocol: HTTP
+        targetPort: 9080
+      websecure:
+        enabled: true
+        port: 9443
+        protocol: HTTPS
+        targetPort: 9443
+      metrics:
+        enabled: true
+        port: 9100
+        protocol: TCP
+        targetPort: 9100
+
+#  udp:
+#    enabled: true
+#    type: LoadBalancer
+
 
 
 # Whether Role Based Access Control objects like roles and rolebindings should be created
@@ -300,6 +312,7 @@ rbac:
 
 # The service account the pods will use to interact with the Kubernetes API
 serviceAccount:
+  enabled: true
   # If set, an existing service account is used
   # If not set, a service account is created automatically using the fullname template
   name: ""
