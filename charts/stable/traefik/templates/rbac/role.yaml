@@ -42,6 +42,7 @@ rules:
       - ingressroutetcps
       - ingressrouteudps
       - middlewares
+      - middlewaretcps
       - tlsoptions
       - tlsstores
       - traefikservices
