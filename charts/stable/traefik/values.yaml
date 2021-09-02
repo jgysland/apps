@@ -22,21 +22,6 @@ pilot:
   # Toggle Pilot Dashboard
   # dashboard: false
 
-# Enable experimental features
-experimental:
-  plugins:
-    enabled: false
-  kubernetesGateway:
-    enabled: false
-    appLabelSelector: "traefik"
-    certificates: []
-    # - group: "core"
-    #   kind: "Secret"
-    #   name: "mysecret"
-    # By default, Gateway would be created to the Namespace you are deploying Traefik to.
-    # You may create that Gateway in another namespace, setting its name below:
-    # namespace: default
-
 # Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
@@ -277,8 +262,6 @@ serviceAccount:
   # If set, an existing service account is used
   # If not set, a service account is created automatically using the fullname template
   name: ""
-
-
 
 # Set the container security context
 # To run the container with ports below 1024 this will need to be adjust to run as root
